@@ -4,15 +4,15 @@
 
 [ -e ./file-counts.json ] && rm file-counts.json
 
-# XXX: to figure out which rev to update to, see if we can get this info locally:
-# https://hg.mozilla.org/mozilla-central/pushloghtml?startdate=2018-12-25&enddate=2018-12-26
-
-
 echo "{" > file-counts.json
 
-notest=$(grep -c -v "test[s]\?" ./file-lists/yyyy-mm-dd.txt)
-test=$(grep -c "test[s]\?" ./file-lists/yyyy-mm-dd.txt)
+for filename in ./file-lists/*.txt; do
+  notest=$(grep -c -v "test[s]\?" $filename)
+  test=$(grep -c "test[s]\?" $filename)
+  echo "\"$filename\": [${notest}, ${test}]," >> file-counts.json
+done
 
-echo "\"yyyy-mm-dd\": [${notest}, ${test}]" >> file-counts.json
+# remove the last comma:
+sed -i '' '$ s/.$//' file-counts.json
 
 echo "}" >> file-counts.json
