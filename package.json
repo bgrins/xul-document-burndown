@@ -1,0 +1,12 @@
+{
+  "name": "xul-analysis",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "clone-repo": "./clone-repo.sh",
+    "generate-file-lists": "./generate-file-lists.sh",
+    "generate-file-counts": "./generate-file-counts.sh",
+    "all": "npm run clone-repo && npm run generate-file-lists && npm run generate-file-counts"
+  },
+  "author": ""
+}
