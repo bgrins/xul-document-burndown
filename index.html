@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>XUL Analysis</title>
+    <link href='./static/metricsgraphics.css' rel='stylesheet' type='text/css'>
+    <script src="./static/d3.v4.min.js"></script>
+    <script src='./static/metricsgraphics.min.js'></script>
+</head>
+<body>
+  <h1>Tracking the number of XUL documents in m-c over time.</h1>
+  <div id="el"></div>
+  <script>
+  d3.json('./file-counts.json', function(data) {
+    let chromeData = [];
+    let testData = [];
+    let chartData = [chromeData, testData];
+    for (let i in data) {
+      let dateStr = i.split("/")[2].split(".txt")[0];
+      chromeData.push({
+        date: new Date(dateStr),
+        value: data[i][0],
+      });
+      testData.push({
+        date: new Date(dateStr),
+        value: data[i][1],
+      });
+    }
+
+    MG.data_graphic({
+        data: chartData,
+        width: 800,
+        height: 400,
+        right: 40,
+        target: '#el',
+        legend: ['Chrome documents', 'Test documents'],
+    });
+});
+</script>
+</body>
+</html>
