@@ -12,6 +12,7 @@
   <div id="el"></div>
   <script>
   d3.json('./file-counts.json', function(data) {
+
     let chromeData = [];
     let testData = [];
     let chartData = [chromeData, testData];
@@ -34,6 +35,7 @@
         right: 40,
         target: '#el',
         legend: ['Chrome documents', 'Test documents'],
+        legend_target: '.legend'
     });
 });
 </script>
