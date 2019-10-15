@@ -2,7 +2,7 @@
 # list of files matching .xul on the entire tree for that day
 
 
-d=2018-12-01
+d=2019-10-01
 end=$(date +"%Y-%m-%d")
 
 echo "Loading data from from $d until $end"
