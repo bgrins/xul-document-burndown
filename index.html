@@ -2,42 +2,98 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>XUL Analysis</title>
-    <link href='./static/metricsgraphics.css' rel='stylesheet' type='text/css'>
-    <script src="./static/d3.v4.min.js"></script>
-    <script src='./static/metricsgraphics.min.js'></script>
+    <title>XUL files in mozilla-central</title>
+    <link href='./static/areweyet/common.css' rel='stylesheet' type='text/css'>
+    <link href='./static/areweyet/apexcharts.css' rel='stylesheet' type='text/css'>
+    <script src='./static/areweyet/apexcharts.js'></script>
+    <style>
+    #links {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+    }
+    </style>
 </head>
 <body>
-  <h1>Tracking the number of XUL documents in m-c over time.</h1>
-  <div id="el"></div>
+  <h1>XUL files in mozilla-central</h1>
+  <div id="links">
+    <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1579952">Metabug</a>
+    <!-- |
+    <a href="../../">Source</a> -->
+  </div>
+
+  <div id="chart"></div>
   <script>
-  d3.json('./file-counts.json', function(data) {
 
-    let chromeData = [];
-    let testData = [];
-    let chartData = [chromeData, testData];
-    for (let i in data) {
-      let dateStr = i.split("/")[2].split(".txt")[0];
-      chromeData.push({
-        date: new Date(dateStr),
-        value: data[i][0],
-      });
-      testData.push({
-        date: new Date(dateStr),
-        value: data[i][1],
-      });
-    }
 
-    MG.data_graphic({
-        data: chartData,
-        width: 800,
-        height: 400,
-        right: 40,
-        target: '#el',
-        legend: ['Chrome documents', 'Test documents'],
-        legend_target: '.legend'
-    });
-});
+async function fetchDataJSON() {
+  let r = await fetch("./file-counts.json");
+  let obj = await r.json();
+  return obj;
+}
+
+async function render() {
+  if (!window.DATA) {
+    window.DATA = await fetchDataJSON();
+  }
+
+  console.log("Gathered data", DATA);
+
+  let chartTitles = [];
+  let chartDataNonTest = [];
+  let chartDataTest = [];
+  for (let fileName in DATA) {
+    chartTitles.push(fileName.split("/")[2].split(".txt")[0]);
+    chartDataNonTest.push(DATA[fileName][0]);
+    chartDataTest.push(DATA[fileName][1]);
+  }
+
+  var options = {
+      chart: {
+          height: 350,
+          type: 'line',
+          zoom: {
+              enabled: false
+          }
+      },
+      series: [{
+          name: "Non-test files",
+          data: chartDataNonTest
+      }, {
+          name: "Test Files",
+          data: chartDataTest
+      }],
+      dataLabels: {
+          enabled: false
+      },
+      stroke: {
+          curve: 'straight'
+      },
+      // title: {
+      //     text: 'XUL files remaining',
+      //     align: 'center'
+      // },
+      grid: {
+          row: {
+              colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+              opacity: 0.5
+          },
+      },
+      xaxis: {
+          categories: chartTitles,
+      }
+  }
+
+  var chart = new ApexCharts(
+      document.querySelector("#chart"),
+      options
+  );
+
+  chart.render();
+}
+
+window.addEventListener("DOMContentLoaded", render);
+
 </script>
 </body>
 </html>
