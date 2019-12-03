@@ -48,9 +48,11 @@ async function render() {
     chartDataTest.push(DATA[fileName][1]);
   }
 
+  console.log(chartTitles, chartDataNonTest,chartDataTest)
+
   var options = {
       chart: {
-          height: 350,
+          height: 500,
           type: 'line',
           zoom: {
               enabled: false
@@ -81,7 +83,11 @@ async function render() {
       },
       xaxis: {
           categories: chartTitles,
-      }
+      },
+      yaxis: {
+        min: 0,
+        max: 1400
+      },
   }
 
   var chart = new ApexCharts(
