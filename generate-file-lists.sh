@@ -14,7 +14,8 @@ cd xul-analysis-mozilla-central && hg revert --all && hg update tip
 # https://hg.mozilla.org/mozilla-central/pushloghtml?startdate=2018-12-25&enddate=2018-12-26
 # Normal commit dates can be wrong, but the hope is that merge commits are actually
 # authored on the same date as the push, so it'd be a simpler way than querying the pushlog.
-while [ "$d" != "$end" ]; do
+while : ; do
+
   current=$d
   d=$(date -j -f %Y-%m-%d -v+1d $current +%Y-%m-%d)
   rev=$(hg log -l 1 -m -d $current --template "{node}")
@@ -22,6 +23,9 @@ while [ "$d" != "$end" ]; do
   if [ -e ../file-lists/$current.txt ]
   then
     echo "Already have data for $current"
+    if [ "$current" == "$end" ]; then
+        break
+    fi
     continue
   fi
 
@@ -33,6 +37,11 @@ while [ "$d" != "$end" ]; do
     hg update -r $rev
     find . -type f -name '*.xul' > ../file-lists/$current.txt
   fi
+
+  if [ "$current" == "$end" ]; then
+      break
+  fi
+
 done
 
 hg update tip
