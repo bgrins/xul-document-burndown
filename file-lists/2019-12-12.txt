@@ -1,0 +1,6 @@
+./mobile/android/chrome/geckoview/geckoview.xul
+./toolkit/mozapps/handling/content/dialog.xul
+./toolkit/mozapps/update/content/updateElevation.xul
+./toolkit/mozapps/extensions/content/blocklist.xul
+./toolkit/mozapps/extensions/content/extensions.xul
+./toolkit/mozapps/downloads/content/unknownContentType.xul

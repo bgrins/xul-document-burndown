@@ -18,7 +18,6 @@ while : ; do
 
   current=$d
   d=$(date -j -f %Y-%m-%d -v+1d $current +%Y-%m-%d)
-  rev=$(hg log -l 1 -m -d $current --template "{node}")
 
   if [ -e ../file-lists/$current.txt ]
   then
@@ -29,6 +28,7 @@ while : ; do
     continue
   fi
 
+  rev=$(hg log -l 1 -m -d $current --template "{node}")
   if [ -z "$rev" ]
   then
     echo "No rev for $current"
@@ -45,6 +45,7 @@ while : ; do
 done
 
 hg update tip
+find . -type f -name '*.xul' > ../file-lists/$current.txt
 cd ..
 
 
